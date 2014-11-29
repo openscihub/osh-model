@@ -83,6 +83,44 @@ describe('Model', function() {
     });
   });
 
+  describe('on("create")', function() {
+    it('should fire', function(done) {
+      var User = MakeUser({username: true});
+      User.on('create', function(user) {
+        user.goodie = 'yum';
+      });
+      User.on('username', function(username, user, done) {
+        expect(username).to.be('tory');
+        expect(user.goodie).to.be('yum');
+        done();
+      });
+      User.create({username: 'tory'}, function(err, user) {
+        expect(err).to.not.be.ok();
+        expect(user.goodie).to.be('yum');
+        done();
+      });
+    });
+  });
+
+  describe('on("update")', function() {
+    it('should fire', function(done) {
+      var User = MakeUser({username: true});
+      User.on('update', function(user) {
+        user.goodie = 'yum';
+      });
+      User.on('username', function(username, user, done) {
+        expect(username).to.be('tory');
+        expect(user.goodie).to.be('yum');
+        done();
+      });
+      User.update({username: 'tory'}, function(err, user) {
+        expect(err).to.not.be.ok();
+        expect(user.goodie).to.be('yum');
+        done();
+      });
+    });
+  });
+
   describe('update()', function() {
     it('should validate instance attrs', function(done) {
       var passwordCalled = false;

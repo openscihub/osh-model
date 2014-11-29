@@ -130,17 +130,28 @@ when finished operating on the attribute.
 
 The `model` namespace is for passing along processed attributes to the
 callbacks on [Model.create](#modelcreatemodel-callback) and
-[Model.update](#modelupdatemodel-callback). Most commonly, you will
-want to pass `value` to `model` like so:
+[Model.update](#modelupdatemodel-callback).
+
+### Model.on('create', callback)
+
+Called immediately after
+[Model.create()](#modelcreatemodel-callback) (before attribute validation)
+so that the `model` namespace
+can be prepared. For example, for denormalization:
 
 ```js
-User.on('username', function(value, user, done) {
-  user.username = username;
-  done();
+Article.on('create', function(article) {
+  article.byAuthor = {};
+  article.byId = {};
 });
 ```
 
-For such a common operation, there is a shortcut...
+Notice there is no `done` callback given here; the listener is assumed
+synchronous.
+
+### Model.on('update', callback)
+
+See documentation for [Model.on('create')](#modeloncreate-callback).
 
 ### Model.keep(attr)
 
@@ -153,12 +164,13 @@ User.on('username', function(username, user, done) {
 });
 ```
 
-but saves you from a function call. This is little more than recognition
+but saves a function call. This is little more than recognition
 that the attribute exists and it should be taken as given (if validated).
 
 ### Model.toss(attr)
 
-Yeah, `attr` exists, we know. Don't fail on Model.check().
+Yeah, `attr` exists, we know and we don't care. Don't fail on
+Model.check().
 
 ### Model.check()
 
