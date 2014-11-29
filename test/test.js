@@ -71,6 +71,18 @@ describe('Model', function() {
     });
   });
 
+  describe('keep()', function() {
+    it('should pass along validated attr', function(done) {
+      var User = MakeUser({username: true});
+      User.keep('username');
+      User.create({username: 'tory'}, function(err, user) {
+        expect(err).to.not.be.ok();
+        expect(user.username).to.be('tory');
+        done();
+      });
+    });
+  });
+
   describe('update()', function() {
     it('should validate instance attrs', function(done) {
       var passwordCalled = false;

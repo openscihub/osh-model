@@ -59,9 +59,7 @@ Server-side usage:
 var User = require('./user');
 var bcrypt = require('bcrypt');
 
-User.on('username', function(username, user) {
-  user.username = username;
-});
+User.keep('username');
 
 User.on('password', function(password, user, done) {
   bcrypt.hash(password, 8, function(err, hash) {
@@ -113,11 +111,6 @@ of form inputs before querying your API. Nuff said.
 On the server, a Model is an augmented EventEmitter. It emits an event
 (named by attribute) whenever a model is created or updated.
 
-### Model.check()
-
-Call this after setting all attribute listeners. If one is missing,
-it will throw an error.
-
 ### Model.on(attr, callback)
 
 Listen for the creation of the indicated attribute. This is fired whenever the
@@ -138,7 +131,7 @@ when finished operating on the attribute.
 The `model` namespace is for passing along processed attributes to the
 callbacks on [Model.create](#modelcreatemodel-callback) and
 [Model.update](#modelupdatemodel-callback). Most commonly, you will
-simply pass `value` to `model` like so:
+want to pass `value` to `model` like so:
 
 ```js
 User.on('username', function(value, user, done) {
@@ -147,11 +140,30 @@ User.on('username', function(value, user, done) {
 });
 ```
 
-For such a common operation, there is a shortcut:
+For such a common operation, there is a shortcut...
+
+### Model.keep(attr)
+
+Equivalent to, e.g.:
 
 ```js
-User.on('username', Model.keep);
+User.on('username', function(username, user, done) {
+  user.username = username;
+  done();
+});
 ```
+
+but saves you from a function call. This is little more than recognition
+that the attribute exists and it should be taken as given (if validated).
+
+### Model.toss(attr)
+
+Yeah, `attr` exists, we know. Don't fail on Model.check().
+
+### Model.check()
+
+Call this after setting all attribute listeners. If one is missing,
+it will throw an error.
 
 ### Model.create(model, callback)
 
