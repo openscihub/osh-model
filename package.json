@@ -1,0 +1,21 @@
+{
+  "name": "osh-model",
+  "version": "0.0.0",
+  "description": "openscihub.org: basic isomorphic model definition",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -C"
+  },
+  "browser": {
+    "index.js": "./lib/model.js"
+  },
+  "author": "Carl A. Bauer",
+  "license": "MIT",
+  "dependencies": {
+    "osh-async-series": "0.0.0",
+    "xtend": "^4.0.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1"
+  }
+}
